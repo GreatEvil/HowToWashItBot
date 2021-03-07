@@ -16,7 +16,7 @@ var userTemperatures  = [];
 var userTumble = [];
 var userdAdditional = [];
 
-var userData = []; //clothes of all users
+var userData = []; 
 
 function sendMultMessages(bot, chatId, messages)
 {
@@ -170,12 +170,10 @@ bot.on('document',
 
 
 
-    bot.onText(/Wash/, 
+bot.onText(/Wash/, 
     async (msg, match) => 
     {
-        if(userData[msg.chat.id].length>0)
-        {
-        console.log(userTumble);
+        console.log(userData);
         var colors = userColors[msg.chat.id].map(elem=>elem.toLowerCase());
 
         var temperatures = userTemperatures[msg.chat.id].map(elem=>elem.toLowerCase());
@@ -190,7 +188,6 @@ bot.on('document',
         var add_filter = [];
 
         var message = msg.text.toString().toLowerCase().replace(",", "").split(" ");
-        console.log(message);
         
         color_filter = message.filter(word => colors.includes(word));
         console.log(color_filter);
@@ -203,24 +200,22 @@ bot.on('document',
 
         add_filter = message.filter(word => additionals.includes(word));
         console.log(add_filter);
-
+            
         var result = userData[msg.chat.id].filter(item=>
-            (color_filter.length == 0 || color_filter.includes(item.color))
+            (color_filter.length == 0 || color_filter.includes(item.color.toLowerCase()))
             && 
-            (temperature_filter.length == 0 ||temperature_filter.includes(item.temperature))
+            (temperature_filter.length == 0 || temperature_filter.includes(item.temperature.toLowerCase()))
             &&
-            (tumble_filter.length == 0 || tumble_filter.includes(item.tumble))
+            (tumble_filter.length == 0 || tumble_filter.includes(item.tumble.toLowerCase()))
             &&
-            (add_filter.length == 0 || add_filter.includes(item.additional))
+            (add_filter.length == 0 || add_filter.includes(item.additional.toLowerCase()))
             );
+
+
+        console.log(result);
         result.forEach(element => {
             sendImage(msg.chat.id, element);
         });
-        }
-        else
-        {
-            bot.sendMessage(msg.chat.id,"There is nothing to wash!");
-        }
     });
 
 
